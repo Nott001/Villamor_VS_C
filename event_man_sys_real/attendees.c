@@ -155,6 +155,24 @@ void updateAttendeeMenu(sqlite3* db) {
     }
     while (getchar() != '\n');
 
+    const char* checkSql = "SELECT COUNT(*) FROM ATTENDEES WHERE ID = ?";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkSql, -1, &checkStmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(checkStmt, 1, id);
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int count = sqlite3_column_int(checkStmt, 0);
+            if (count == 0) {
+                fprintf(stderr, "Please input an existing Attendee ID\n");
+                sqlite3_finalize(checkStmt);
+                return;
+            }
+        }
+        sqlite3_finalize(checkStmt);
+    }
+    else {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return;
+    }
     printf("Enter Attendee Name: ");
     if (scanf_s(" %[^\n]%*c", name, (unsigned int)(sizeof(char) * 50)) != 1) {
         fprintf(stderr, "Invalid input. Please enter a valid Name.\n");
@@ -178,8 +196,26 @@ void deleteAttendeeMenu(sqlite3* db) {
         fprintf(stderr, "Invalid input. Please enter a valid Attendee ID.\n");
         return;
     }
-
     while (getchar() != '\n');
+
+    const char* checkSql = "SELECT COUNT(*) FROM ATTENDEES WHERE ID = ?";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkSql, -1, &checkStmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(checkStmt, 1, id);
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int count = sqlite3_column_int(checkStmt, 0);
+            if (count == 0) {
+                fprintf(stderr, "Please input an existing Attendee ID\n");
+                sqlite3_finalize(checkStmt);
+                return;
+            }
+        }
+        sqlite3_finalize(checkStmt);
+    }
+    else {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return;
+    }
 
     deleteAttendee(db, id);
 }

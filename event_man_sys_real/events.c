@@ -131,7 +131,38 @@ void updateEventMenu(sqlite3* db) {
     char* activities = (char*)malloc(2000 * sizeof(char));
 
     printf("Enter Event ID to update: ");
-    scanf_s("%d", &id);
+    if (scanf_s("%d", &id) != 1) {
+        fprintf(stderr, "Invalid input for Event ID\n");
+        return;
+    }
+
+    char* checkSql = "SELECT COUNT(*) FROM EVENTS WHERE ID = ?";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkSql, -1, &checkStmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(checkStmt, 1, id);
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int count = sqlite3_column_int(checkStmt, 0);
+            if (count == 0) {
+                fprintf(stderr, "Please input an existing Event ID\n");
+                sqlite3_finalize(checkStmt);
+                free(name);
+                free(location);
+                free(date);
+                free(activities);
+                return;
+            }
+        }
+        sqlite3_finalize(checkStmt);
+    }
+    else {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        free(name);
+        free(location);
+        free(date);
+        free(activities);
+        return;
+    }
+
     printf("Enter Event Type: ");
     scanf_s(" %[^\n]%*c", name, 1000);
     printf("Enter Event Location: ");
@@ -152,7 +183,30 @@ void updateEventMenu(sqlite3* db) {
 void deleteEventMenu(sqlite3* db) {
     int id;
     printf("Enter Event ID to delete: ");
-    scanf_s("%d", &id);
+    if (scanf_s("%d", &id) != 1) {
+        fprintf(stderr, "Invalid input for Event ID\n");
+        return;
+    }
+
+    char* checkSql = "SELECT COUNT(*) FROM EVENTS WHERE ID = ?";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkSql, -1, &checkStmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(checkStmt, 1, id);
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int count = sqlite3_column_int(checkStmt, 0);
+            if (count == 0) {
+                fprintf(stderr, "Please input an existing Event ID\n");
+                sqlite3_finalize(checkStmt);
+                return;
+            }
+        }
+        sqlite3_finalize(checkStmt);
+    }
+    else {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return;
+    }
+
     deleteEvent(db, id);
 }
 
