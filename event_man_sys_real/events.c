@@ -37,7 +37,7 @@ void viewEvent(sqlite3* db) {
 
     ft_table_t* table = ft_create_table();
     ft_set_cell_prop(table, 0, FT_ANY_COLUMN, FT_CPROP_ROW_TYPE, FT_ROW_HEADER);
-    ft_write_ln(table, "ID", "Name", "Location", "Date", "Activities", "Attendees");
+    ft_write_ln(table, " Event ID", " Event Type", "Location", "Date", "Activities", "Attendees");
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         char id_str[15];
