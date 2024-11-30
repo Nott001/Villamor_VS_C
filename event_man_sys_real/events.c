@@ -106,13 +106,13 @@ void addEventMenu(sqlite3* db) {
 
     printf("Enter Event ID: ");
     scanf_s("%d", &id);
-    printf("Enter Event Name: ");
+    printf("Enter Event Type: ");
     scanf_s(" %[^\n]%*c", name, 1000);
     printf("Enter Event Location: ");
     scanf_s(" %[^\n]%*c", location, 1000);
     printf("Enter Event Date (YYYY-MM-DD): ");
     scanf_s("%s", date, 20);
-    printf("Enter Event Activities: ");
+    printf("Enter Event Activities (X, X...): ");
     scanf_s(" %[^\n]%*c", activities, 2000);
 
     addEvent(db, id, name, location, date, activities);
@@ -132,13 +132,13 @@ void updateEventMenu(sqlite3* db) {
 
     printf("Enter Event ID to update: ");
     scanf_s("%d", &id);
-    printf("Enter Event Name: ");
+    printf("Enter Event Type: ");
     scanf_s(" %[^\n]%*c", name, 1000);
     printf("Enter Event Location: ");
     scanf_s(" %[^\n]%*c", location, 1000);
     printf("Enter Event Date (YYYY-MM-DD): ");
     scanf_s("%s", date, 20);
-    printf("Enter Event Activities: ");
+    printf("Enter Event Activities (X, X...): ");
     scanf_s(" %[^\n]%*c", activities, 2000);
 
     updateEvent(db, id, name, location, date, activities);
