@@ -28,10 +28,10 @@ int main() {
         printf("|-------------------------------------------------------------------------------------------|\n");
         printf("|             5  > Manage Event              |             6  > Manage Attendee             |\n");
         printf("|-------------------------------------------------------------------------------------------|\n");
-        printf("                                        |10 > Exit|                                          \n");
+        printf("                                        |7 > Exit|                                          \n");
         printf("                                        -----------                                          \n");
 		printf("                                                                                             \n");
-        printf("                             PLEASE ENTER THE NUMBER OF YOUR CHOICE                          \n");
+        printf("                            PLEASE ENTER THE NUMBER OF YOUR CHOICE                           \n");
         scanf_s("%d", &choice);
 
         switch (choice) {
