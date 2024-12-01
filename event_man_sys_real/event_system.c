@@ -5,6 +5,7 @@
 #include "attendees.h"
 #include "database.h"
 
+//Iterate through the events table and display the events
 int main() {
     sqlite3* db;
     int rc = sqlite3_open("event_management.db", &db);
@@ -18,7 +19,7 @@ int main() {
     }
 
     createDatabase(db);
-
+	//Main menu
     int choice;
     while (1) {
         printf("|===========================================================================================|\n");
@@ -28,12 +29,13 @@ int main() {
         printf("|-------------------------------------------------------------------------------------------|\n");
         printf("|             5  > Manage Event              |             6  > Manage Attendee             |\n");
         printf("|-------------------------------------------------------------------------------------------|\n");
-        printf("                                        |7 > Exit|                                          \n");
+        printf("                                        |7 > Exit|                                           \n");
         printf("                                        -----------                                          \n");
 		printf("                                                                                             \n");
         printf("                            PLEASE ENTER THE NUMBER OF YOUR CHOICE                           \n");
         scanf_s("%d", &choice);
 
+		//Switch case to handle the user's choice
         switch (choice) {
         case 1:
 			system("cls");
@@ -57,7 +59,7 @@ int main() {
             break;
         case 6:
 			system("cls");
-			manageAttendance(db);
+			manageAttendees(db);
 			break;  
         case 7:
 			system("cls");
@@ -68,7 +70,7 @@ int main() {
             printf("Invalid choice! Please try again.\n");
         }
     }
-
+	//Close the database
     sqlite3_close(db);
     return 0;
 }

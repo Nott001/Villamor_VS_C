@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "database.h"
 
+//Create the database 
 void createDatabase(sqlite3* db) {
     char* errMsg = 0;
     const char* sqlEvents = "CREATE TABLE IF NOT EXISTS EVENTS ("
@@ -15,6 +16,12 @@ void createDatabase(sqlite3* db) {
         "NAME TEXT NOT NULL,"
         "EVENT_ID INT NOT NULL);";
 
+    const char* sqlFeedbacks = "CREATE TABLE IF NOT EXISTS EVENT_FEEDBACKS ("
+        "ID INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "EVENT_ID INTEGER,"
+        "FEEDBACK TEXT,"
+        "FOREIGN KEY (EVENT_ID) REFERENCES EVENTS(ID));";
+
     int rc = sqlite3_exec(db, sqlEvents, 0, 0, &errMsg);
 
     if (rc != SQLITE_OK) {
@@ -23,6 +30,13 @@ void createDatabase(sqlite3* db) {
     }
 
     rc = sqlite3_exec(db, sqlAttendees, 0, 0, &errMsg);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+
+    rc = sqlite3_exec(db, sqlFeedbacks, 0, 0, &errMsg);
 
     if (rc != SQLITE_OK) {
         fprintf(stderr, "SQL error: %s\n", errMsg);

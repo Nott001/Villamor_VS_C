@@ -3,6 +3,7 @@
 #include "fort/fort.h"
 #include "attendees.h"
 
+//Add an attendee to the database
 void addAttendee(sqlite3* db, int id, const char* name, int eventID) {
     char sql[256];
     snprintf(sql, sizeof(sql), "INSERT INTO ATTENDEES (ID, NAME, EVENT_ID) "
@@ -20,6 +21,7 @@ void addAttendee(sqlite3* db, int id, const char* name, int eventID) {
     }
 }
 
+//Update an attendee in the database
 void updateAttendee(sqlite3* db, int id, const char* name, int eventID) {
     char sql[256];
     snprintf(sql, sizeof(sql), "UPDATE ATTENDEES SET NAME='%s', EVENT_ID=%d WHERE ID=%d;",
@@ -37,6 +39,7 @@ void updateAttendee(sqlite3* db, int id, const char* name, int eventID) {
     }
 }
 
+//View all attendees for a specific event
 void viewAttendeeByEvent(sqlite3* db, int eventId) {
     const char* sql = "SELECT * FROM ATTENDEES WHERE EVENT_ID = ?;";
     sqlite3_stmt* stmt;
@@ -85,6 +88,7 @@ void viewAttendeeByEvent(sqlite3* db, int eventId) {
     sqlite3_finalize(stmt);
 }
 
+//Delete an attendee from the database
 void deleteAttendee(sqlite3* db, int id) {
     char sql[256];
     snprintf(sql, sizeof(sql), "DELETE FROM ATTENDEES WHERE ID=%d;", id);
@@ -101,6 +105,7 @@ void deleteAttendee(sqlite3* db, int id) {
     }
 }
 
+//Menu to add an attendee
 void addAttendeeMenu(sqlite3* db) {
     int id, eventID;
     char name[50];
@@ -131,6 +136,7 @@ void addAttendeeMenu(sqlite3* db) {
     addAttendee(db, id, name, eventID);
 }
 
+//Menu to view attendees by event
 void viewAttendeeByEventMenu(sqlite3* db) {
     int eventId;
     printf("Enter Event ID to view attendees: ");
@@ -144,6 +150,7 @@ void viewAttendeeByEventMenu(sqlite3* db) {
     viewAttendeeByEvent(db, eventId);
 }
 
+//Menu to update an attendee
 void updateAttendeeMenu(sqlite3* db) {
     int id, eventID;
     char name[50];
@@ -188,6 +195,7 @@ void updateAttendeeMenu(sqlite3* db) {
     updateAttendee(db, id, name, eventID);
 }
 
+//Delete an attendee from an event
 void deleteAttendeeMenu(sqlite3* db) {
     int id;
     printf("Enter Attendee ID to delete: ");
@@ -220,7 +228,8 @@ void deleteAttendeeMenu(sqlite3* db) {
     deleteAttendee(db, id);
 }
 
-void manageAttendance(sqlite3* db) {
+//Menu to manage attendees and handle user's choice
+void manageAttendees(sqlite3* db) {
     int choice;
     while (1) {
         printf("|===========================================================================================|\n");
