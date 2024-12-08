@@ -145,7 +145,6 @@ void viewAttendeeByEventMenu(sqlite3* db) {
         while (getchar() != '\n');
         return;
     }
-    while (getchar() != '\n');
 
     viewAttendeeByEvent(db, eventId);
 }

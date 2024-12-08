@@ -17,7 +17,6 @@ void createDatabase(sqlite3* db) {
         "EVENT_ID INT NOT NULL);";
 
     const char* sqlFeedbacks = "CREATE TABLE IF NOT EXISTS EVENT_FEEDBACKS ("
-        "ID INTEGER PRIMARY KEY AUTOINCREMENT,"
         "EVENT_ID INTEGER,"
         "FEEDBACK TEXT,"
         "FOREIGN KEY (EVENT_ID) REFERENCES EVENTS(ID));";

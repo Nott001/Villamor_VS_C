@@ -87,9 +87,11 @@ void updateEvent(sqlite3* db, int id, const char* name, const char* location, co
 //Delete an event from the database
 void deleteEvent(sqlite3* db, int id) {
     char sql[256];
-    snprintf(sql, sizeof(sql), "DELETE FROM EVENTS WHERE ID=%d;", id);
-
     char* errMsg = 0;
+
+    snprintf(sql, sizeof(sql), "DELETE FROM EVENT_FEEDBACKS WHERE EVENT_ID=%d;", id); 
+    sqlite3_exec(db, sql, 0, 0, &errMsg);
+    snprintf(sql, sizeof(sql), "DELETE FROM EVENTS WHERE ID=%d;", id);
     int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
 
     if (rc != SQLITE_OK) {
@@ -119,9 +121,8 @@ void addEventFeedback(sqlite3* db, int event_id, const char* feedback) {
     }
 }
 
-//View all attendees feedbacks for a specific event
 void viewEventFeedbacks(sqlite3* db, int event_id) {
-    const char* sql = "SELECT ID, FEEDBACK FROM EVENT_FEEDBACKS WHERE EVENT_ID = ?";
+    const char* sql = "SELECT FEEDBACK FROM EVENT_FEEDBACKS WHERE EVENT_ID = ?";
     sqlite3_stmt* stmt;
 
     int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, 0);
@@ -134,17 +135,11 @@ void viewEventFeedbacks(sqlite3* db, int event_id) {
 
     ft_table_t* table = ft_create_table();
     ft_set_cell_prop(table, 0, FT_ANY_COLUMN, FT_CPROP_ROW_TYPE, FT_ROW_HEADER);
-    ft_write_ln(table, "Feedback ID", "Feedback");
+    ft_write_ln(table, "Feedback");
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        char id_str[15];
-        int id = sqlite3_column_int(stmt, 0);
-        snprintf(id_str, sizeof(id_str), "%d", id);
-
-        ft_write_ln(table,
-            id_str,
-            sqlite3_column_text(stmt, 1)
-        );
+        const char* feedback = (const char*)sqlite3_column_text(stmt, 0);
+        ft_write_ln(table, feedback);
     }
 
     printf("%s\n", ft_to_string(table));
@@ -161,8 +156,16 @@ void addEventMenu(sqlite3* db) {
     char* date = (char*)malloc(20 * sizeof(char));
     char* activities = (char*)malloc(2000 * sizeof(char));
 
-    printf("Enter Event ID: ");
-    scanf_s("%d", &id);
+    while (1) {
+        printf("Enter Event ID: ");
+        if (scanf_s("%d", &id) == 1 && id > 0) {
+            break;
+        }
+        else {
+            printf("Invalid input. Please enter a positive integer.\n");
+            while (getchar() != '\n');
+        }
+    }
     printf("Enter Event Type: ");
     scanf_s(" %[^\n]%*c", name, 1000);
     printf("Enter Event Location: ");
@@ -245,6 +248,26 @@ void addEventFeedbackMenu(sqlite3* db) {
 
     printf("Enter Event ID: ");
     scanf_s("%d", &event_id);
+
+    char* checkSql = "SELECT COUNT(*) FROM EVENTS WHERE ID = ?";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkSql, -1, &checkStmt, NULL) == SQLITE_OK) {
+        sqlite3_bind_int(checkStmt, 1, event_id);
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int count = sqlite3_column_int(checkStmt, 0);
+            if (count == 0) {
+                fprintf(stderr, "Please input an existing Event ID\n");
+                sqlite3_finalize(checkStmt);
+                return;
+            }
+        }
+        sqlite3_finalize(checkStmt);
+    }
+    else {
+        fprintf(stderr, "Failed to prepare statement: %s\n", sqlite3_errmsg(db));
+        return;
+    }
+
     printf("Enter Feedback: ");
     scanf_s(" %[^\n]%*c", feedback, 2000);
 

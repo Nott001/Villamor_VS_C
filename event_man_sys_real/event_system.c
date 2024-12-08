@@ -5,7 +5,15 @@
 #include "attendees.h"
 #include "database.h"
 
-//Iterate through the events table and display the events
+//Waits for user input to continue
+void continuebutton() {
+    printf("Press Enter to go back to continue...");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    getchar();
+}
+
+//Opens up the database
 int main() {
     sqlite3* db;
     int rc = sqlite3_open("event_management.db", &db);
@@ -15,16 +23,20 @@ int main() {
         return 0;
     }
     else {
-        fprintf(stderr, "Opened database successfully\n");
+        fprintf(stderr, "------------------------------------------------------------------------------------------------------------------------\n");
     }
+
+
 
     createDatabase(db);
 	//Main menu
     int choice;
     while (1) {
-        printf("|===========================================================================================|\n");
-        printf("|                                   Event Management System                                 |\n");
-        printf("|===========================================================================================|\n");
+        printf("|======================================================================================================================|\n");
+        printf("|                                                                                                                      |\n");
+        printf("|                                                \033[1;36m Event Management System\033                                              |\n");
+        printf("|                                                                                                                      |\n");
+        printf("|======================================================================================================================|\n");
 		printf("|   1  > Add Event   |   2  > Add Attendee   |   3  > View Event   |   4  > View Attendee   |\n");
         printf("|-------------------------------------------------------------------------------------------|\n");
         printf("|             5  > Manage Event              |             6  > Manage Attendee             |\n");
@@ -48,10 +60,14 @@ int main() {
         case 3:
 			system("cls");
             viewEvent(db);
+            continuebutton();
+            system("cls");
             break;
         case 4:
 			system("cls");
             viewAttendeeByEventMenu(db);
+            continuebutton();
+            system("cls");
             break;
         case 5:
 			system("cls");
