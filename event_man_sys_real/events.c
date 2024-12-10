@@ -3,6 +3,7 @@
 #include <string.h>
 #include "fort/fort.h"
 #include "events.h"
+#include "attendees.h"
 
 //Add an event to the database
 void addEvent(sqlite3* db, int id, const char* name, const char* location, const char* date, const char* activities) {
@@ -101,6 +102,8 @@ void deleteEvent(sqlite3* db, int id) {
     else {
         fprintf(stdout, "Event deleted successfully\n");
     }
+
+    deleteAttendeesByEventID(db, id);
 }
 
 //Add attendees feedback for a specific event
@@ -311,19 +314,19 @@ void deleteEventMenu(sqlite3* db) {
 void manageEvent(sqlite3* db) {
     int choice;
     while (1) {
-        printf("|===========================================================================================|\n");
-        printf("|                                         Manage Events                                     |\n");
-        printf("|===========================================================================================|\n");
-        printf("|            1    >                         Add Event                                       |\n");
-        printf("|            2    >                        View Events                                      |\n");
-        printf("|            3    >                       Update Events                                     |\n");
-        printf("|            4    >                       Delete Events                                     |\n");
-        printf("|            5    >                    View Event Attendees                                 |\n");
-        printf("|            6    >                     Add Event Feedback                                  |\n");
-        printf("|            7    >                    View Event Feedbacks                                 |\n");
-        printf("|            8    >                         Go Back                                         |\n");
-        printf("|===========================================================================================|\n");
-        printf("                                        Enter your choice:                                   \n");
+        printf("|======================================================================================================================|\n");
+        printf("|                                                       \033[1;36mManage Events\033[0m                                                  |\n");
+        printf("|======================================================================================================================|\n");
+        printf("|                          1    >                         Add Event                                                    |\n");
+        printf("|                          2    >                        View Events                                                   |\n");
+        printf("|                          3    >                       Update Events                                                  |\n");
+        printf("|                          4    >                       Delete Events                                                  |\n");
+        printf("|                          5    >                    View Event Attendees                                              |\n");
+        printf("|                          6    >                     Add Event Feedback                                               |\n");
+        printf("|                          7    >                    View Event Feedbacks                                              |\n");
+        printf("|                          8    >                         Go Back                                                      |\n");
+        printf("|======================================================================================================================|\n");
+        printf("                                                      Enter your choice:                                                \n");
         if (scanf_s("%d", &choice) != 1) {
             fprintf(stderr, "Invalid input! Please enter a number.\n");
             while (getchar() != '\n');

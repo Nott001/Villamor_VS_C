@@ -130,7 +130,9 @@
     <ClCompile Include="attendees.c" />
     <ClCompile Include="database.c" />
     <ClCompile Include="events.c" />
-    <ClCompile Include="event_system.c" />
+    <ClCompile Include="event_system.c">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="fort\fort.c" />
     <ClCompile Include="sqlite\shell.c" />
     <ClCompile Include="sqlite\sqlite3.c" />

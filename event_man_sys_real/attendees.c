@@ -92,7 +92,6 @@ void viewAttendeeByEvent(sqlite3* db, int eventId) {
 void deleteAttendee(sqlite3* db, int id) {
     char sql[256];
     snprintf(sql, sizeof(sql), "DELETE FROM ATTENDEES WHERE ID=%d;", id);
-
     char* errMsg = 0;
     int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
 
@@ -102,6 +101,22 @@ void deleteAttendee(sqlite3* db, int id) {
     }
     else {
         fprintf(stdout, "Attendee deleted successfully\n");
+    }
+}
+
+//Delete all existing attendees assoiciated with an event ID
+void deleteAttendeesByEventID(sqlite3* db, int eventID) {
+    char sql[256];
+    snprintf(sql, sizeof(sql), "DELETE FROM ATTENDEES WHERE EVENT_ID=%d;", eventID);
+    char* errMsg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "SQL error: %s\n", errMsg);
+        sqlite3_free(errMsg);
+    }
+    else {
+        fprintf(stdout, "All attendees associated with Event ID %d deleted successfully\n", eventID);
     }
 }
 
@@ -231,16 +246,16 @@ void deleteAttendeeMenu(sqlite3* db) {
 void manageAttendees(sqlite3* db) {
     int choice;
     while (1) {
-        printf("|===========================================================================================|\n");
-        printf("|                                       Manage Attendees                                    |\n");
-        printf("|===========================================================================================|\n");
-        printf("|            1    >                       Add Attendee                                      |\n");
-        printf("|            2    >                      View Attendees                                     |\n");
-        printf("|            3    >                     Update Attendees                                    |\n");
-        printf("|            4    >                     Delete Attendees                                    |\n");
-        printf("|            5    >                         Go Back                                         |\n");
-        printf("|===========================================================================================|\n");
-        printf("                                        Enter your choice:                                   \n");
+        printf("|======================================================================================================================|\n");
+        printf("|                                                     \033[1;36mManage Attendees\033[0m                                                 |\n");
+        printf("|======================================================================================================================|\n");
+        printf("|                          1    >                       Add Attendee                                                   |\n");
+        printf("|                          2    >                      View Attendees                                                  |\n");
+        printf("|                          3    >                     Update Attendees                                                 |\n");
+        printf("|                          4    >                     Delete Attendees                                                 |\n");
+        printf("|                          5    >                         Go Back                                                      |\n");
+        printf("|======================================================================================================================|\n");
+        printf("                                                     Enter your choice:                                                 \n");
         if (scanf_s("%d", &choice) != 1) {
             fprintf(stderr, "Invalid input! Please enter a number.\n");
             while (getchar() != '\n');
